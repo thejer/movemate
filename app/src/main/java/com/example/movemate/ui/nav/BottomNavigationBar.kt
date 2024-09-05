@@ -15,12 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movemate.ui.SlideUpAnimation
 import com.example.movemate.ui.home.HomeScreen
+import com.example.movemate.ui.shipments.Shipments
 import com.example.movemate.ui.theme.DarkGray
 import com.example.movemate.ui.theme.Purple
 
@@ -38,8 +40,11 @@ fun BottomNavigationBar(navController: NavController) {
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.startDestinationId)
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
                         launchSingleTop = true
+                        restoreState = true
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
@@ -56,10 +61,14 @@ fun BottomNavigationBar(navController: NavController) {
 
 @Composable
 fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController = navController, startDestination = Screen.Home.route, modifier = modifier) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.route,
+        modifier = modifier
+    ) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.Calculate.route) { SlideUpAnimation() }
-        composable(Screen.Shipment.route) { ShipmentScreen() }
+        composable(Screen.Shipment.route) { Shipments(navController::navigateUp) }
         composable(Screen.Profile.route) { ProfileScreen() }
     }
 }
@@ -68,13 +77,6 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
 fun CalculateScreen() {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text("Calculate Screen")
-    }
-}
-
-@Composable
-fun ShipmentScreen() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Shipment Screen")
     }
 }
 

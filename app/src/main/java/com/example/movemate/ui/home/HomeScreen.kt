@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.movemate.R
+import com.example.movemate.ui.BackButton
 import com.example.movemate.ui.theme.Midnight
 import com.example.movemate.ui.theme.OffWhite
 import com.example.movemate.ui.theme.Purple
@@ -198,12 +199,7 @@ fun HomeScreen() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(modifier = Modifier.width(16.dp))
-                        Icon(
-                            modifier = Modifier.clickable { focusManager.clearFocus() },
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
-                            contentDescription = "back button",
-                            tint = Color.White
-                        )
+                        BackButton(onBackPressed = { focusManager.clearFocus() })
                         Spacer(modifier = Modifier.width(24.dp))
                     }
                 }

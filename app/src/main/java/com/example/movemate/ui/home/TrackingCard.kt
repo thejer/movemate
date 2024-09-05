@@ -231,7 +231,7 @@ fun TrackingCard() {
                 end.linkTo(parent.end, margin = 16.dp)
             }) {
                 Text(
-                    text = "Status",
+                    text = "ShipmentStatus",
                     color = SlateGray,
                     fontSize = 12.sp
                 )
