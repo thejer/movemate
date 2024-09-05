@@ -19,7 +19,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.movemate.TrackingScreen
+import com.example.movemate.ui.SlideUpAnimation
+import com.example.movemate.ui.home.TrackingScreen
 import com.example.movemate.ui.theme.DarkGray
 import com.example.movemate.ui.theme.Purple
 
@@ -57,17 +58,9 @@ fun BottomNavigationBar(navController: NavController) {
 fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = Screen.Home.route, modifier = modifier) {
         composable(Screen.Home.route) { TrackingScreen() }
-        composable(Screen.Calculate.route) { CalculateScreen() }
+        composable(Screen.Calculate.route) { SlideUpAnimation() }
         composable(Screen.Shipment.route) { ShipmentScreen() }
         composable(Screen.Profile.route) { ProfileScreen() }
-    }
-}
-
-
-@Composable
-fun HomeScreen() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Home Screen")
     }
 }
 

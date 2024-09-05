@@ -1,9 +1,16 @@
-package com.example.movemate
+package com.example.movemate.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,20 +24,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,25 +42,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.movemate.ui.theme.BackgroundGray
+import com.example.movemate.R
 import com.example.movemate.ui.theme.GlowGreen
 import com.example.movemate.ui.theme.Graphite
+import com.example.movemate.ui.theme.Midnight
 import com.example.movemate.ui.theme.MintGreen
 import com.example.movemate.ui.theme.OffWhite
-import com.example.movemate.ui.theme.Orange
 import com.example.movemate.ui.theme.Purple
 import com.example.movemate.ui.theme.PurpleWhite
 import com.example.movemate.ui.theme.PurpleWhite2
-import com.example.movemate.ui.theme.RainyGray
 import com.example.movemate.ui.theme.SlateGray
 import com.example.movemate.ui.theme.SombreGray
 import com.example.movemate.ui.theme.SweetOrange
@@ -75,205 +73,212 @@ fun TrackingScreen() {
             .background(OffWhite)
     ) {
         TopBar()
-
-        Spacer(modifier = Modifier.height(24.dp))
+        val focusManager = LocalFocusManager.current
 
         Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+            Modifier.clickable { focusManager.clearFocus() }
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Tracking",
+                    style = TextStyle(
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        color = Midnight
+                    ),
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TrackingCard()
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
             Text(
-                text = "Tracking",
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Available vehicles",
                 style = TextStyle(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
-                    color = Graphite
+                    color = Midnight
                 ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            TrackingCard()
-
-            Spacer(modifier = Modifier.height(24.dp))
+            AvailableVehicles(
+                modifier = Modifier.padding(start = 16.dp),
+            )
         }
-
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Available vehicles",
-            style = TextStyle(fontWeight = FontWeight.Bold)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        AvailableVehicles(
-            modifier = Modifier.padding(start = 16.dp),
-        )
-
     }
 }
 
 @Composable
 fun TopBar() {
+    var isVisible by remember { mutableStateOf(true) }
+
+    val focusManager = LocalFocusManager.current
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .background(Purple)
+            .padding(top = 16.dp)
     ) {
+        val (header, backButton) = createRefs()
 
-        val (profileImage, locationColumn, notification, search) = createRefs()
-        Image(
-            painter = painterResource(id = R.drawable.profile_image),
-            contentDescription = null,
-            modifier = Modifier
-                .constrainAs(profileImage) {
-                    top.linkTo(parent.top, margin = 16.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-                .size(40.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-
-
-        Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .constrainAs(locationColumn) {
-                    top.linkTo(profileImage.top)
-                    start.linkTo(profileImage.end, margin = 10.dp)
-                    bottom.linkTo(profileImage.bottom)
-                }
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_location),
-                    contentDescription = "location icon",
-                    Modifier.size(18.dp),
-                    tint = PurpleWhite
-                )
-                Spacer(modifier = Modifier.width(3.dp))
-                Text(
-                    text = "Your location",
-                    color = PurpleWhite,
-                    fontSize = 14.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(1.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Wertheimer, Illinois",
-                    fontSize = 18.sp,
-                    color = PurpleWhite2
-                )
-                Spacer(modifier = Modifier.width(3.dp))
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_expand_more),
-                    contentDescription = "expand icon",
-                    Modifier.size(18.dp),
-                    tint = PurpleWhite2,
-                )
-            }
-
-        }
-
-        Box(modifier = Modifier
-            .background(shape = CircleShape, color = Color.White)
-            .size(40.dp)
-            .constrainAs(notification) {
-                top.linkTo(profileImage.top)
-                end.linkTo(parent.end, margin = 16.dp)
-                bottom.linkTo(profileImage.bottom)
-            }) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
-                contentDescription = "notification icon",
-                Modifier
-                    .size(24.dp)
-                    .align(Alignment.Center),
-                tint = Purple,
+        val exitTransition = fadeOut(
+            animationSpec = tween(
+                durationMillis = 100,
+                easing = FastOutLinearInEasing
             )
-        }
-
-        SearchView(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 20.dp, horizontal = 16.dp)
-            .constrainAs(search) {
-                top.linkTo(profileImage.bottom)
-                end.linkTo(parent.end)
+        ) + shrinkVertically(
+            animationSpec = tween(
+                durationMillis = 280,
+                delayMillis = 10,
+                easing = FastOutLinearInEasing
+            )
+        )
+        val enterTransition = fadeIn(
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = LinearOutSlowInEasing,
+                delayMillis = 30
+            )
+        ) + expandVertically(animationSpec = tween(durationMillis = 100))
+        AnimatedVisibility(
+            modifier = Modifier.constrainAs(header) {
+                top.linkTo(parent.top)
                 start.linkTo(parent.start)
-            }) {
+                end.linkTo(parent.end)
+            },
+            visible = isVisible,
+            exit = exitTransition,
+            enter = enterTransition
+        ) {
+            ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+                val (profileImage, locationColumn, notification) = createRefs()
+                Image(
+                    painter = painterResource(id = R.drawable.profile_image),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .constrainAs(profileImage) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start, margin = 16.dp)
+                        }
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
 
+                Column(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .constrainAs(locationColumn) {
+                            top.linkTo(profileImage.top)
+                            start.linkTo(profileImage.end, margin = 16.dp)
+                            bottom.linkTo(profileImage.bottom)
+                        }
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_location),
+                            contentDescription = "location icon",
+                            Modifier.size(18.dp),
+                            tint = PurpleWhite
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = "Your location",
+                            color = PurpleWhite,
+                            fontSize = 14.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(1.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Wertheimer, Illinois",
+                            fontSize = 18.sp,
+                            color = PurpleWhite2
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_expand_more),
+                            contentDescription = "expand icon",
+                            Modifier.size(18.dp),
+                            tint = PurpleWhite2,
+                        )
+                    }
+
+                }
+
+                Box(modifier = Modifier
+                    .background(shape = CircleShape, color = Color.White)
+                    .size(40.dp)
+                    .constrainAs(notification) {
+                        top.linkTo(profileImage.top)
+                        end.linkTo(parent.end, margin = 16.dp)
+                        bottom.linkTo(profileImage.bottom)
+                    }) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
+                        contentDescription = "notification icon",
+                        Modifier
+                            .size(24.dp)
+                            .align(Alignment.Center),
+                        tint = Purple,
+                    )
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(end = 16.dp)
+                .constrainAs(backButton) {
+                    top.linkTo(header.bottom, margin = 20.dp)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
+                    bottom.linkTo(parent.bottom, margin = 18.dp)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AnimatedVisibility(visible = isVisible.not()) {
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Icon(
+                        modifier = Modifier.clickable { focusManager.clearFocus() },
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
+                        contentDescription = "back button",
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(24.dp))
+                }
+            }
+            AnimatedVisibility(visible = isVisible) {
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            SearchView(modifier = Modifier.fillMaxWidth(), onFocusChange = {
+                isVisible = it.isFocused.not()
+            })
         }
     }
 }
 
 @Composable
-fun SearchView(
-    modifier: Modifier = Modifier,
-    onSearch: (String) -> Unit
-) {
-    var searchText by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        modifier = modifier
-            .height(52.dp)
-            .background(Color.White, shape = RoundedCornerShape(50.dp)),
-        value = searchText,
-        onValueChange = { searchText = it },
-        leadingIcon = {
-            Icon(
-                modifier = Modifier
-                    .size(28.dp)
-                    .padding(start = 6.dp),
-                imageVector = Icons.Filled.Search,
-                contentDescription = "Search Icon",
-                tint = Purple
-            )
-        },
-        trailingIcon = {
-            Box(
-                Modifier
-                    .padding(end = 6.dp)
-                    .background(shape = CircleShape, color = Orange)
-                    .size(40.dp)
-                    .clickable {
-                        searchText = ""
-                    }
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_receipt),
-                    contentDescription = "Receipt Icon",
-                    Modifier
-                        .size(16.dp)
-                        .align(Alignment.Center),
-                    tint = Color.White,
-                )
-            }
-        },
-        shape = RoundedCornerShape(50.dp),
-        placeholder = {
-            Text(
-                text = "Enter the receipt number...",
-                color = RainyGray
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Purple,
-            unfocusedBorderColor = Purple
-        ),
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) })
-    )
-}
-
-@Composable
 fun TrackingCard() {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -511,101 +516,8 @@ fun TrackingCard() {
     }
 }
 
-@Composable
-fun AvailableVehicles(modifier: Modifier = Modifier) {
-    val vehicles = listOf(
-        Vehicle("Ocean freight", "International", R.drawable.ic_ocean_freight),
-        Vehicle("Cargo freight", "Reliable", R.drawable.ic_cargo_freight),
-        Vehicle("Air freight", "International", R.drawable.ic_air_freight),
-        Vehicle("Train freight", "Multi Service", R.drawable.ic_train_freight),
-        Vehicle("Instant freight", "Local", R.drawable.ic_instant_freight),
-        Vehicle("Road freight", "Local", R.drawable.ic_road_freight),
-    )
-    LazyRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(vehicles, key = { it.titleText }) { vehicle ->
-            VehicleCard(vehicle = vehicle)
-        }
-    }
-}
-
-data class Vehicle(
-    val titleText: String,
-    val subtitleText: String,
-    val iconImage: Int
-)
-
-@Composable
-fun VehicleCard(vehicle: Vehicle) {
-    Card(
-        modifier = Modifier
-            .background(BackgroundGray)
-            .width(120.dp)
-            .wrapContentHeight(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        ConstraintLayout(
-            modifier = Modifier
-                .background(BackgroundGray)
-                .fillMaxWidth(),
-        ) {
-            val (title, subTitle, icon) = createRefs()
-
-            Text(
-                modifier = Modifier.constrainAs(title) {
-                    top.linkTo(parent.top, margin = 10.dp)
-                    start.linkTo(parent.start, margin = 10.dp)
-                },
-                text = vehicle.titleText,
-                color = Graphite,
-                fontSize = 14.sp
-            )
-
-            Text(
-                modifier = Modifier.constrainAs(subTitle) {
-                    top.linkTo(title.bottom, margin = 4.dp)
-                    start.linkTo(parent.start, margin = 10.dp)
-                },
-                text = vehicle.subtitleText,
-                color = SlateGray,
-                fontSize = 12.sp
-            )
-
-            Image(
-                modifier = Modifier
-                    .height(90.dp)
-                    .constrainAs(icon) {
-                        top.linkTo(subTitle.bottom)
-                        end.linkTo(parent.end)
-                    },
-                painter = painterResource(id = vehicle.iconImage),
-                contentDescription = vehicle.titleText
-            )
-        }
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewTrackingScreen() {
     TrackingScreen()
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewVehicleCard() {
-    VehicleCard(Vehicle("Air freight", "International", R.drawable.ic_air_freight))
-}
-
-
-@Preview(showBackground = true, backgroundColor = 0xFF543A9C)
-@Composable
-fun PreviewSearchView() {
-    SearchView(onSearch = { query ->
-
-    })
-}
-
