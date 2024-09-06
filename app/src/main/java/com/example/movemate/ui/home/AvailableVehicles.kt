@@ -1,5 +1,6 @@
 package com.example.movemate.ui.home
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,12 +30,12 @@ import com.example.movemate.ui.theme.SlateGray
 @Composable
 fun AvailableVehicles(modifier: Modifier = Modifier) {
     val vehicles = listOf(
-        Vehicle("Ocean freight", "International", R.drawable.ic_ocean_freight),
-        Vehicle("Cargo freight", "Reliable", R.drawable.ic_cargo_freight),
-        Vehicle("Air freight", "International", R.drawable.ic_air_freight),
-        Vehicle("Train freight", "Multi Service", R.drawable.ic_train_freight),
-        Vehicle("Instant freight", "Local", R.drawable.ic_instant_freight),
-        Vehicle("Road freight", "Local", R.drawable.ic_road_freight),
+        Vehicle(R.string.ocean_freight, R.string.international, R.drawable.ic_ocean_freight),
+        Vehicle(R.string.cargo_freight, R.string.reliable, R.drawable.ic_cargo_freight),
+        Vehicle(R.string.air_freight, R.string.international, R.drawable.ic_air_freight),
+        Vehicle(R.string.train_freight, R.string.multi_service, R.drawable.ic_train_freight),
+        Vehicle(R.string.instant_freight, R.string.local, R.drawable.ic_instant_freight),
+        Vehicle(R.string.road_freight, R.string.local, R.drawable.ic_road_freight),
     )
     LazyRow(
         modifier = modifier,
@@ -46,8 +48,8 @@ fun AvailableVehicles(modifier: Modifier = Modifier) {
 }
 
 data class Vehicle(
-    val titleText: String,
-    val subtitleText: String,
+    @StringRes val titleText: Int,
+    @StringRes val subtitleText: Int,
     val iconImage: Int
 )
 
@@ -73,7 +75,7 @@ fun VehicleCard(vehicle: Vehicle) {
                     top.linkTo(parent.top, margin = 10.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 },
-                text = vehicle.titleText,
+                text = stringResource(vehicle.titleText),
                 color = Midnight,
                 fontSize = 16.sp
             )
@@ -83,7 +85,7 @@ fun VehicleCard(vehicle: Vehicle) {
                     top.linkTo(title.bottom, margin = 4.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 },
-                text = vehicle.subtitleText,
+                text = stringResource(vehicle.subtitleText),
                 color = SlateGray,
                 fontSize = 14.sp
             )
@@ -96,7 +98,7 @@ fun VehicleCard(vehicle: Vehicle) {
                         end.linkTo(parent.end)
                     },
                 painter = painterResource(id = vehicle.iconImage),
-                contentDescription = vehicle.titleText
+                contentDescription = stringResource(vehicle.titleText)
             )
         }
     }
@@ -106,6 +108,10 @@ fun VehicleCard(vehicle: Vehicle) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewVehicleCard() {
-    VehicleCard(Vehicle("Air freight", "International", R.drawable.ic_air_freight))
+    VehicleCard(Vehicle(
+        titleText = R.string.air_freight,
+        subtitleText = R.string.international,
+        iconImage = R.drawable.ic_air_freight
+    ))
 }
 

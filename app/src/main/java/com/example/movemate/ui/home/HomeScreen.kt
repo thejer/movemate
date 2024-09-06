@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -132,13 +133,13 @@ fun HomeScreen() {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_location),
-                                contentDescription = "location icon",
+                                contentDescription = stringResource(R.string.location_icon),
                                 Modifier.size(18.dp),
                                 tint = PurpleWhite
                             )
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
-                                text = "Your location",
+                                text = stringResource(R.string.your_location),
                                 color = PurpleWhite,
                                 fontSize = 14.sp
                             )
@@ -147,14 +148,14 @@ fun HomeScreen() {
                         Spacer(modifier = Modifier.height(1.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Wertheimer, Illinois",
+                                text = stringResource(R.string.wertheimer_illinois),
                                 fontSize = 18.sp,
                                 color = PurpleWhite2
                             )
                             Spacer(modifier = Modifier.width(3.dp))
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_expand_more),
-                                contentDescription = "expand icon",
+                                contentDescription = stringResource(R.string.expand_icon),
                                 Modifier.size(18.dp),
                                 tint = PurpleWhite2,
                             )
@@ -172,7 +173,7 @@ fun HomeScreen() {
                         }) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
-                            contentDescription = "notification icon",
+                            contentDescription = stringResource(R.string.notification_icon),
                             Modifier
                                 .size(24.dp)
                                 .align(Alignment.Center),
@@ -236,7 +237,7 @@ private fun TrackingScreen(focusManager: FocusManager) {
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = "Tracking",
+                text = stringResource(R.string.tracking),
                 style = TextStyle(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
@@ -253,7 +254,7 @@ private fun TrackingScreen(focusManager: FocusManager) {
 
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Available vehicles",
+            text = stringResource(R.string.available_vehicles),
             style = TextStyle(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp,
