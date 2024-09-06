@@ -44,7 +44,7 @@ import com.example.movemate.ui.theme.PurpleWhite
 import com.example.movemate.ui.theme.PurpleWhite2
 
 @Composable
-fun TopBar(
+fun TrackingTopBar(
     isVisible: Boolean,
     focusManager: FocusManager
 ): Boolean {

@@ -11,7 +11,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,8 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.movemate.ui.BackButton
+import com.example.movemate.ui.TopBar
 import com.example.movemate.ui.theme.IndicatorOrange
 import com.example.movemate.ui.theme.Midnight
 import com.example.movemate.ui.theme.Purple
@@ -84,38 +82,7 @@ fun ShipmentsTabLayout(
     }
 
     Column(Modifier.background(Purple)) {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            val (backButton, header) = createRefs()
-            BackButton(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 11.dp, bottom = 11.dp)
-                    .clickable {}
-                    .constrainAs(backButton) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
-                onBackPressed = onBackPressed
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(header) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
-                text = "Shipment history",
-                style = TextStyle(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    color = Color.White
-                )
-            )
-        }
+        TopBar("Shipment history", onBackPressed)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
