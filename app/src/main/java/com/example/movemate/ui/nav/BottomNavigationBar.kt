@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movemate.ui.SlideUpAnimation
 import com.example.movemate.ui.home.HomeScreen
-import com.example.movemate.ui.shipments.Shipments
+import com.example.movemate.ui.shipments.ShipmentsTabLayout
 import com.example.movemate.ui.theme.DarkGray
 import com.example.movemate.ui.theme.Purple
 
@@ -68,7 +68,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
     ) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.Calculate.route) { SlideUpAnimation() }
-        composable(Screen.Shipment.route) { Shipments(navController::navigateUp) }
+        composable(Screen.Shipment.route) { ShipmentsTabLayout(navController::navigateUp) }
         composable(Screen.Profile.route) { ProfileScreen() }
     }
 }

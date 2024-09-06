@@ -1,13 +1,8 @@
 package com.example.movemate.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,15 +41,19 @@ fun SlideUpAnimation() {
         if (show) 0.dp else -100.dp // Negative offset to move it up and out of view
     }
 
+    LaunchedEffect(showTopBox) {
+//        delay(100)
+        showTopBox = false
+    }
     Column(modifier = Modifier
-//        .offset(y = topBoxOffset)
+        .offset(y = topBoxOffset)
     ) {
-        AnimatedVisibility(
-            modifier = Modifier, // Apply offset to top box
-            visible = showTopBox,
-            exit = fadeOut() + shrinkVertically(),
-            enter = fadeIn() + expandVertically()
-        ) {
+//        AnimatedVisibility(
+//            modifier = Modifier, // Apply offset to top box
+//            visible = showTopBox,
+////            exit = fadeOut() + shrinkVertically(),
+////            enter = fadeIn() + expandVertically()
+//        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,7 +66,7 @@ fun SlideUpAnimation() {
                         .fillMaxSize(),
                     text = "Top Box")
             }
-        }
+//        }
 
             Box(
                 modifier = Modifier

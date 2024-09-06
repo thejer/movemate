@@ -40,9 +40,9 @@ import com.example.movemate.ui.theme.RoyalPurple
 import com.example.movemate.ui.theme.SlateGray
 
 @Composable
-fun Shipment(shipmentItem: ShipmentItem) {
+fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .background(Color.White)
             .wrapContentHeight()
             .fillMaxWidth(),
@@ -86,6 +86,12 @@ fun Shipment(shipmentItem: ShipmentItem) {
                     statusColor = CoolBlue
                     statusIcon = R.drawable.ic_loading
                 }
+
+                ShipmentStatus.CANCELLED -> {
+                    statusText = "cancelled"
+                    statusColor = Color.Red
+                    statusIcon = R.drawable.ic_cancelled
+                }
             }
             Row(
                 modifier = Modifier
@@ -126,9 +132,8 @@ fun Shipment(shipmentItem: ShipmentItem) {
                     color = Graphite
                 )
             )
-            val deliveryDescription = "Your delivery," +
-                    " \n#${shipmentItem.shipmentCode} from " +
-                    "\n${shipmentItem.origin}, is arriving today!"
+            val deliveryDescription = "Your delivery, #${shipmentItem.shipmentCode} " +
+                    "\nfrom ${shipmentItem.origin}, is arriving today!"
             Text(
                 modifier = Modifier.constrainAs(deliveryDetails) {
                     top.linkTo(arrivalDay.bottom, margin = 8.dp)
@@ -209,7 +214,8 @@ data class ShipmentItem(
 enum class ShipmentStatus {
     IN_PROGRESS,
     PENDING,
-    LOADING
+    LOADING,
+    CANCELLED
 }
 
 @Composable
@@ -222,5 +228,5 @@ fun ShipmentPreview() {
         cost = "$1400",
         date = "Sep 20, 2023"
     )
-    Shipment(shipmentItem)
+    Shipment(shipmentItem = shipmentItem)
 }

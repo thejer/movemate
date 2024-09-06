@@ -1,16 +1,29 @@
 package com.example.movemate.ui.shipments
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ScrollableTabRow
@@ -30,28 +43,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.movemate.ui.BackButton
 import com.example.movemate.ui.theme.IndicatorOrange
+import com.example.movemate.ui.theme.Midnight
 import com.example.movemate.ui.theme.Purple
 import com.example.movemate.ui.theme.PurpleWhite
 import com.example.movemate.ui.theme.ShadePurple
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Shipments(
+fun ShipmentsTabLayout(
     onBackPressed: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
+
     val tabs = listOf(
-        TabItem("All", 10),
-        TabItem("Completed", 5),
-        TabItem("In Progress", 3),
-        TabItem("Pending Order", 2),
-        TabItem("Cancelled", 1),
+        TabItem("All"),
+        TabItem("Completed"),
+        TabItem("In Progress"),
+        TabItem("Pending Order"),
+        TabItem("Cancelled"),
     )
     val pagerState = rememberPagerState {
         tabs.size
@@ -70,7 +87,6 @@ fun Shipments(
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Purple)
         ) {
             val (backButton, header) = createRefs()
             BackButton(
@@ -119,7 +135,7 @@ fun Shipments(
                 }
             ) {
                 tabs.forEachIndexed { index, tab ->
-
+                    val shipments = shipmentItems(index)
                     val isSelected = selectedTabIndex == index
                     val countBackgroundColor = if (isSelected) IndicatorOrange else ShadePurple
                     Tab(
@@ -127,33 +143,23 @@ fun Shipments(
                         selected = isSelected,
                         selectedContentColor = Color.White,
                         unselectedContentColor = PurpleWhite,
-                        onClick = { selectedTabIndex = index },
+                        onClick = {
+                            selectedTabIndex = index
+                        },
                         text = {
-                            ConstraintLayout(modifier = Modifier.align(Alignment.Start)) {
-                                val (text, count) = createRefs()
-                                Text(
-                                    modifier = Modifier.constrainAs(text) {
-                                        top.linkTo(parent.top)
-                                        bottom.linkTo(parent.bottom)
-                                        start.linkTo(parent.start)
-                                    }, text = tab.name,
-                                    fontSize = 13.sp
-                                )
+                            Row(modifier = Modifier.align(Alignment.Start)) {
+                                Text(text = tab.name, fontSize = 13.sp)
+
+                                Spacer(modifier = Modifier.size(4.dp))
 
                                 Text(
                                     modifier = Modifier
                                         .background(
-                                            countBackgroundColor,
-                                            shape = RoundedCornerShape(12.dp)
-                                        )
+                                            color = countBackgroundColor,
+                                            shape = RoundedCornerShape(12.dp))
                                         .width(30.dp)
-                                        .height(20.dp)
-                                        .constrainAs(count) {
-                                            top.linkTo(text.top)
-                                            bottom.linkTo(text.bottom)
-                                            start.linkTo(text.end, margin = 4.dp)
-                                        },
-                                    text = "${tab.count}",
+                                        .height(20.dp),
+                                    text = "${shipments.size}",
                                     fontSize = 12.sp
                                 )
                             }
@@ -162,58 +168,240 @@ fun Shipments(
                 }
             }
 
-            HorizontalPager(
-                state = pagerState, modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) { index ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = tabs[index].name)
-                }
-            }
-
-            // Content for each tab goes here
-            when (selectedTabIndex) {
-                0 -> AllContent()
-                1 -> CompletedContent()
-                2 -> InProgressContent()
-                3 -> PendingOrderContent()
-                4 -> CancelledContent()
-            }
+            Shipments(selectedTabIndex)
         }
     }
 }
 
-data class TabItem(val name: String, val count: Int)
-
-// Placeholder composables for tab content
 @Composable
-fun AllContent() {
-    Text("Content for All tab")
+private fun shipmentItems(index: Int): List<ShipmentItem> {
+    val shipments = when (index) {
+        0 -> getShipments()
+        1 -> getShipments(ShipmentStatus.LOADING)
+        2 -> getShipments(ShipmentStatus.IN_PROGRESS)
+        3 -> getShipments(ShipmentStatus.PENDING)
+        else -> getShipments(ShipmentStatus.CANCELLED)
+    }
+    return shipments
 }
 
-@Composable
-fun CompletedContent() {
-    Text("Content for Completed tab")
+fun getShipments(status: ShipmentStatus? = null): List<ShipmentItem> {
+    val shipments = listOf(
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222311",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222312",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.LOADING,
+            shipmentCode = "NEJ200899341222313",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.LOADING,
+            shipmentCode = "NEJ200899341222314",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222315",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222316",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222317",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222318",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222319",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222310",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899041222319",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.LOADING,
+            shipmentCode = "NEJ200899341222328",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.LOADING,
+            shipmentCode = "NEJ200899341222337",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222346",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222355",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222364",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222373",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.LOADING,
+            shipmentCode = "NEJ200899341222382",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.PENDING,
+            shipmentCode = "NEJ200899341222391",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+        ShipmentItem(
+            shipmentStatus = ShipmentStatus.IN_PROGRESS,
+            shipmentCode = "NEJ200899341222300",
+            origin = "Atlanta",
+            cost = "$1400",
+            date = "Sep 20, 2023"
+        ),
+    )
+    status?.let {
+        return shipments.filter { it.shipmentStatus == status }
+    }
+    return shipments
 }
 
-@Composable
-fun InProgressContent() {
-    Text("Content for In Progress tab")
-}
+data class TabItem(val name: String)
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PendingOrderContent() {
-    Text("Content for Pending Order tab")
-}
+fun Shipments(index: Int) {
+    val shipments = shipmentItems(index)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        var showTopBox by remember(shipments) { mutableStateOf(false) }
+        LaunchedEffect(index) {
+            delay(10)
+            showTopBox = true
+        }
 
-@Composable
-fun CancelledContent() {
-    Text("Content for Cancelled tab")
+        if (shipments.isEmpty()) return
+
+        LazyColumn(
+            Modifier
+                .background(Color.White)
+                .padding(horizontal = 16.dp)
+                .fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.size(4.dp))
+            }
+
+            item {
+                Text(
+                    text = "Shipments",
+                    style = TextStyle(
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        color = Midnight
+                    )
+                )
+            }
+            items(shipments, key = { it.shipmentCode }) { shipment ->
+                AnimatedVisibility(
+                    visible = showTopBox,
+                    exit = ExitTransition.None,
+                    enter = fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 600,
+                            easing = LinearOutSlowInEasing,
+                        )
+                    ) + slideInVertically { fullHeight -> fullHeight }
+                ) {
+                    Shipment(
+                        modifier = Modifier
+                            .animateItemPlacement(
+                                animationSpec = spring(
+                                    stiffness = Spring.StiffnessMediumLow,
+                                    visibilityThreshold = IntOffset.VisibilityThreshold
+                                )
+                            ), shipment
+                    )
+                }
+            }
+        }
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ShipmentsPreview() {
-    Shipments()
+    ShipmentsTabLayout()
 }
