@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -70,7 +71,7 @@ fun TrackingCard() {
                     top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                 },
-                text = "Shipment Number",
+                text = stringResource(R.string.shipment_number),
                 color = SlateGray,
                 fontSize = 14.sp
             )
@@ -96,7 +97,7 @@ fun TrackingCard() {
                         end.linkTo(parent.end, margin = 16.dp)
                     },
                 painter = painterResource(id = R.drawable.ic_forklift),
-                contentDescription = "forklift shipment image"
+                contentDescription = stringResource(R.string.forklift_shipment_image)
             )
 
             HorizontalDivider(
@@ -130,7 +131,7 @@ fun TrackingCard() {
                             .size(20.dp)
                             .align(Alignment.Center),
                         painter = painterResource(id = R.drawable.ic_sender_box),
-                        contentDescription = "sender icon image"
+                        contentDescription = stringResource(R.string.sender_icon_image)
                     )
                 }
 
@@ -138,7 +139,7 @@ fun TrackingCard() {
 
                 Column {
                     Text(
-                        text = "Sender",
+                        text = stringResource(R.string.sender),
                         color = SlateGray,
                         fontSize = 12.sp
                     )
@@ -158,7 +159,7 @@ fun TrackingCard() {
                 start.linkTo(receiverStatus.start)
             }) {
                 Text(
-                    text = "Time",
+                    text = stringResource(R.string.time),
                     color = SlateGray,
                     fontSize = 12.sp
                 )
@@ -203,7 +204,7 @@ fun TrackingCard() {
                             .size(20.dp)
                             .align(Alignment.Center),
                         painter = painterResource(id = R.drawable.ic_receiver_box),
-                        contentDescription = "sender icon image"
+                        contentDescription = stringResource(R.string.receiver_icon_image)
                     )
                 }
 
@@ -211,7 +212,7 @@ fun TrackingCard() {
 
                 Column {
                     Text(
-                        text = "Receiver",
+                        text = stringResource(R.string.receiver),
                         color = SlateGray,
                         fontSize = 12.sp
                     )
@@ -231,7 +232,7 @@ fun TrackingCard() {
                 end.linkTo(parent.end, margin = 16.dp)
             }) {
                 Text(
-                    text = "ShipmentStatus",
+                    text = stringResource(R.string.status),
                     color = SlateGray,
                     fontSize = 12.sp
                 )
@@ -239,7 +240,7 @@ fun TrackingCard() {
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "Waiting to collect",
+                    text = stringResource(R.string.waiting_to_collect),
                     color = Graphite,
                     fontSize = 14.sp
                 )
@@ -268,12 +269,12 @@ fun TrackingCard() {
                     }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_add),
-                    contentDescription = "Add stop icon",
+                    contentDescription = stringResource(R.string.add_stop_icon),
                     tint = SweetOrange,
                 )
 
                 Text(
-                    text = "Add Stop",
+                    text = stringResource(R.string.add_stop),
                     color = SweetOrange,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,

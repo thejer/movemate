@@ -39,12 +39,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.movemate.R
 import com.example.movemate.ui.TopBar
 import com.example.movemate.ui.theme.IndicatorOrange
 import com.example.movemate.ui.theme.Midnight
@@ -62,11 +64,11 @@ fun ShipmentsTabLayout(
     var selectedTabIndex by remember { mutableStateOf(0) }
 
     val tabs = listOf(
-        TabItem("All"),
-        TabItem("Completed"),
-        TabItem("In Progress"),
-        TabItem("Pending Order"),
-        TabItem("Cancelled"),
+        TabItem(stringResource(R.string.all)),
+        TabItem(stringResource(R.string.completed)),
+        TabItem(stringResource(R.string.in_progress_title)),
+        TabItem(stringResource(R.string.pending_order)),
+        TabItem(stringResource(id = R.string.cancelled)),
     )
     val pagerState = rememberPagerState {
         tabs.size
@@ -82,7 +84,7 @@ fun ShipmentsTabLayout(
     }
 
     Column(Modifier.background(Purple)) {
-        TopBar("Shipment history", onBackPressed)
+        TopBar(stringResource(id = R.string.shipment_history), onBackPressed)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,7 +125,8 @@ fun ShipmentsTabLayout(
                                     modifier = Modifier
                                         .background(
                                             color = countBackgroundColor,
-                                            shape = RoundedCornerShape(12.dp))
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
                                         .width(30.dp)
                                         .height(20.dp),
                                     text = "${shipments.size}",
@@ -332,7 +335,7 @@ fun Shipments(index: Int) {
 
             item {
                 Text(
-                    text = "Shipments",
+                    text = stringResource(R.string.shipments),
                     style = TextStyle(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp,

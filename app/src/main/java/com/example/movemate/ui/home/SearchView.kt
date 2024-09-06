@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,7 +58,7 @@ fun SearchView(
                     .padding(end = 6.dp)
                     .size(18.dp),
                 imageVector = Icons.Filled.Search,
-                contentDescription = "Search Icon",
+                contentDescription = stringResource(R.string.search_icon),
             )
         },
         trailingIcon = {
@@ -72,7 +73,7 @@ fun SearchView(
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_receipt),
-                    contentDescription = "Receipt Icon",
+                    contentDescription = stringResource(R.string.receipt_icon),
                     Modifier
                         .size(16.dp)
                         .align(Alignment.Center),
@@ -83,7 +84,7 @@ fun SearchView(
         shape = RoundedCornerShape(50.dp),
         placeholder = {
             Text(
-                text = "Enter the receipt number...",
+                text = stringResource(R.string.enter_the_receipt_number),
                 fontSize = 15.sp
             )
         },

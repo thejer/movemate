@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -114,13 +115,13 @@ fun TrackingTopBar(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_location),
-                            contentDescription = "location icon",
+                            contentDescription = stringResource(id = R.string.location_icon),
                             Modifier.size(18.dp),
                             tint = PurpleWhite
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Text(
-                            text = "Your location",
+                            text = stringResource(id = R.string.your_location),
                             color = PurpleWhite,
                             fontSize = 14.sp
                         )
@@ -129,14 +130,14 @@ fun TrackingTopBar(
                     Spacer(modifier = Modifier.height(1.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Wertheimer, Illinois",
+                            text = stringResource(id = R.string.wertheimer_illinois),
                             fontSize = 18.sp,
                             color = PurpleWhite2
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_expand_more),
-                            contentDescription = "expand icon",
+                            contentDescription = stringResource(id = R.string.expand_icon),
                             Modifier.size(18.dp),
                             tint = PurpleWhite2,
                         )
@@ -154,7 +155,7 @@ fun TrackingTopBar(
                     }) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_notification),
-                        contentDescription = "notification icon",
+                        contentDescription = stringResource(id = R.string.notification_icon),
                         Modifier
                             .size(24.dp)
                             .align(Alignment.Center),
@@ -184,7 +185,7 @@ fun TrackingTopBar(
                     Icon(
                         modifier = Modifier.clickable { focusManager.clearFocus() },
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
-                        contentDescription = "back button",
+                        contentDescription = stringResource(R.string.back_button),
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(24.dp))

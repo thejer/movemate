@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -70,25 +71,25 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
             @DrawableRes val statusIcon: Int
             when (shipmentItem.shipmentStatus) {
                 ShipmentStatus.IN_PROGRESS -> {
-                    statusText = "in-progress"
+                    statusText = stringResource(R.string.in_progress)
                     statusColor = GlowGreen
                     statusIcon = R.drawable.ic_in_progress
                 }
 
                 ShipmentStatus.PENDING -> {
-                    statusText = "pending"
+                    statusText = stringResource(R.string.pending)
                     statusColor = IndicatorOrange
                     statusIcon = R.drawable.ic_pending
                 }
 
                 ShipmentStatus.LOADING -> {
-                    statusText = "loading"
+                    statusText = stringResource(R.string.loading)
                     statusColor = CoolBlue
                     statusIcon = R.drawable.ic_loading
                 }
 
                 ShipmentStatus.CANCELLED -> {
-                    statusText = "cancelled"
+                    statusText = stringResource(R.string.cancelled)
                     statusColor = Color.Red
                     statusIcon = R.drawable.ic_cancelled
                 }
@@ -109,7 +110,7 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                     modifier = Modifier.size(13.dp),
                     tint = statusColor,
                     imageVector = ImageVector.vectorResource(id = statusIcon),
-                    contentDescription = statusText
+                    contentDescription = statusText.lowercase()
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
@@ -125,15 +126,18 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                     top.linkTo(shipmentStatus.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                 },
-                text = "Arriving today!",
+                text = stringResource(R.string.arriving_today),
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Graphite
                 )
             )
-            val deliveryDescription = "Your delivery, #${shipmentItem.shipmentCode} " +
-                    "\nfrom ${shipmentItem.origin}, is arriving today!"
+            val deliveryDescription = stringResource(
+                R.string.delivery_desc_template,
+                shipmentItem.shipmentCode,
+                shipmentItem.origin
+            )
             Text(
                 modifier = Modifier.constrainAs(deliveryDetails) {
                     top.linkTo(arrivalDay.bottom, margin = 8.dp)
@@ -152,7 +156,7 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                     top.linkTo(deliveryDetails.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                 },
-                text = "${shipmentItem.cost} USD",
+                text = stringResource(R.string.shipment_cost_template, shipmentItem.cost),
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
@@ -166,7 +170,7 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                     bottom.linkTo(cost.bottom)
                     start.linkTo(cost.end, margin = 4.dp)
                 },
-                text = "•",
+                text = stringResource(R.string.dot),
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
@@ -197,7 +201,7 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                         end.linkTo(parent.end)
                     },
                 painter = painterResource(id = R.drawable.ic_delivery),
-                contentDescription = "delivery"
+                contentDescription = stringResource(R.string.delivery)
             )
         }
     }
@@ -222,7 +226,7 @@ enum class ShipmentStatus {
 @Preview(showBackground = true, backgroundColor = 0xFF2A2B34)
 fun ShipmentPreview() {
     val shipmentItem = ShipmentItem(
-        shipmentStatus = ShipmentStatus.IN_PROGRESS,
+        shipmentStatus = ShipmentStatus.CANCELLED,
         shipmentCode = "NEJ20089934122231",
         origin = "Atlanta",
         cost = "$1400",

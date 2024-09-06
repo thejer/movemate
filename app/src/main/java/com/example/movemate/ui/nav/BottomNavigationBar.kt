@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -20,7 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.movemate.ui.SlideUpAnimation
+import com.example.movemate.ui.calculate.CalculateScreen
 import com.example.movemate.ui.home.HomeScreen
 import com.example.movemate.ui.shipments.ShipmentsTabLayout
 import com.example.movemate.ui.theme.DarkGray
@@ -35,8 +36,8 @@ fun BottomNavigationBar(navController: NavController) {
     NavigationBar(containerColor = Color.White) {
         items.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(ImageVector.vectorResource(id = screen.icon), contentDescription = screen.title) },
-                label = { Text(screen.title) },
+                icon = { Icon(ImageVector.vectorResource(id = screen.icon), contentDescription = stringResource(id =screen.title)) },
+                label = { Text(stringResource(id =screen.title)) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
@@ -67,16 +68,9 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         modifier = modifier
     ) {
         composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Calculate.route) { SlideUpAnimation() }
+        composable(Screen.Calculate.route) { CalculateScreen() }
         composable(Screen.Shipment.route) { ShipmentsTabLayout(navController::navigateUp) }
         composable(Screen.Profile.route) { ProfileScreen() }
-    }
-}
-
-@Composable
-fun CalculateScreen() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Calculate Screen")
     }
 }
 
