@@ -24,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movemate.ui.calculate.CalculateScreen
 import com.example.movemate.ui.home.HomeScreen
 import com.example.movemate.ui.shipments.ShipmentsTabLayout
+import com.example.movemate.ui.summary.SummaryPage
 import com.example.movemate.ui.theme.DarkGray
 import com.example.movemate.ui.theme.Purple
 
@@ -36,8 +37,15 @@ fun BottomNavigationBar(navController: NavController) {
     NavigationBar(containerColor = Color.White) {
         items.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(ImageVector.vectorResource(id = screen.icon), contentDescription = stringResource(id =screen.title)) },
-                label = { Text(stringResource(id =screen.title)) },
+                icon = {
+                    screen.icon?.let {
+                        Icon(
+                            ImageVector.vectorResource(id = screen.icon),
+                            contentDescription = stringResource(id = screen.title)
+                        )
+                    }
+                },
+                label = { Text(stringResource(id = screen.title)) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
@@ -68,9 +76,21 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         modifier = modifier
     ) {
         composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Calculate.route) { CalculateScreen() }
+        composable(Screen.Calculate.route) {
+            CalculateScreen(
+                onBackPressed = navController::navigateUp,
+                onCalculateClicked = {
+                    navController.navigate(Screen.Summary.route)
+                }
+            )
+        }
         composable(Screen.Shipment.route) { ShipmentsTabLayout(navController::navigateUp) }
         composable(Screen.Profile.route) { ProfileScreen() }
+        composable(Screen.Summary.route) {
+            SummaryPage {
+                navController.navigate(Screen.Home.route)
+            }
+        }
     }
 }
 

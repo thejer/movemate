@@ -58,6 +58,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.constraintlayout.compose)
 
+    implementation (libs.material3)
     implementation (libs.accompanist.systemuicontroller)
 
     implementation(libs.androidx.ui)

@@ -110,12 +110,12 @@ fun Shipment(modifier: Modifier = Modifier, shipmentItem: ShipmentItem) {
                     modifier = Modifier.size(13.dp),
                     tint = statusColor,
                     imageVector = ImageVector.vectorResource(id = statusIcon),
-                    contentDescription = statusText.lowercase()
+                    contentDescription = statusText
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                     modifier = Modifier,
-                    text = statusText,
+                    text = statusText.lowercase(),
                     color = statusColor,
                     fontSize = 12.sp
                 )

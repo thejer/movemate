@@ -2,6 +2,7 @@ package com.example.movemate.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,8 @@ import com.example.movemate.ui.theme.SlateGray
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchReceipt(modifier: Modifier = Modifier) {
+    val focusManager = LocalFocusManager.current
+
     val items = listOf(
         Item(
             packageName = "Macbook pro M2",
@@ -75,6 +79,7 @@ fun SearchReceipt(modifier: Modifier = Modifier) {
         modifier = modifier
             .background(OffWhite)
             .fillMaxWidth()
+            .clickable { focusManager.clearFocus() }
             .padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
         Card(
