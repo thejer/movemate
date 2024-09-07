@@ -50,12 +50,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.movemate.R
-import com.example.movemate.ui.BackButton
 import com.example.movemate.ui.theme.Midnight
 import com.example.movemate.ui.theme.OffWhite
 import com.example.movemate.ui.theme.Purple
 import com.example.movemate.ui.theme.PurpleWhite
 import com.example.movemate.ui.theme.PurpleWhite2
+import com.example.movemate.ui.utils.BackButton
 
 @Composable
 fun HomeScreen() {
@@ -196,7 +196,7 @@ fun HomeScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AnimatedVisibility(visible = isVisible.not()) {
-                    Row (
+                    Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(modifier = Modifier.width(16.dp))
@@ -213,14 +213,21 @@ fun HomeScreen() {
             }
         }
 
-        if (isVisible) TrackingScreen(focusManager)
-        AnimatedVisibility(visible = isVisible.not() && showReceipts,
-            enter = fadeIn( animationSpec = tween(
-                durationMillis = 600,
-                easing = LinearOutSlowInEasing,
-            )) + slideInVertically { fullHeight -> fullHeight},
-        ) {
-            SearchReceipt(modifier = Modifier)
+        Column {
+            if (isVisible) TrackingScreen(focusManager)
+            AnimatedVisibility(
+                visible = isVisible.not() && showReceipts,
+                enter = fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        easing = LinearOutSlowInEasing,
+                    )
+                ) + slideInVertically { fullHeight -> fullHeight },
+            ) {
+                SearchReceipt(modifier = Modifier)
+            }
+
+            Spacer(modifier = Modifier.size(27.dp))
         }
     }
 }

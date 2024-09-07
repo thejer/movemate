@@ -47,12 +47,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movemate.R
-import com.example.movemate.ui.TopBar
 import com.example.movemate.ui.theme.IndicatorOrange
 import com.example.movemate.ui.theme.Midnight
+import com.example.movemate.ui.theme.OffWhite
 import com.example.movemate.ui.theme.Purple
 import com.example.movemate.ui.theme.PurpleWhite
 import com.example.movemate.ui.theme.ShadePurple
+import com.example.movemate.ui.utils.TopBar
 import kotlinx.coroutines.delay
 
 
@@ -313,7 +314,7 @@ fun Shipments(index: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(OffWhite)
     ) {
         var showTopBox by remember(shipments) { mutableStateOf(false) }
         LaunchedEffect(index) {
@@ -325,7 +326,7 @@ fun Shipments(index: Int) {
 
         LazyColumn(
             Modifier
-                .background(Color.White)
+                .background(OffWhite)
                 .padding(horizontal = 16.dp)
                 .fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -349,7 +350,7 @@ fun Shipments(index: Int) {
                     exit = ExitTransition.None,
                     enter = fadeIn(
                         animationSpec = tween(
-                            durationMillis = 600,
+                            durationMillis = 300,
                             easing = LinearOutSlowInEasing,
                         )
                     ) + slideInVertically { fullHeight -> fullHeight }

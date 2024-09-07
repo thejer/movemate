@@ -40,7 +40,7 @@
     <string name="in_progress">in-progress</string>
     <string name="pending">pending</string>
     <string name="loading">loading</string>
-    <string name="cancelled">cancelled</string>
+    <string name="cancelled">Cancelled</string>
     <string name="arriving_today">Arriving today!</string>
     <string name="delivery_desc_template">Your delivery, #%1$s \nfrom %2$s, is arriving today!</string>
     <string name="shipment_cost_template">%1$s USD</string>
@@ -51,4 +51,28 @@
     <string name="completed">Completed</string>
     <string name="in_progress_title">In Progress</string>
     <string name="pending_order">Pending Order</string>
+    <string name="destination">Destination</string>
+    <string name="sender_location">Sender location</string>
+    <string name="receiver_location">Receiver location</string>
+    <string name="approx_weight">Approx weight</string>
+    <string name="packaging">Packaging</string>
+    <string name="what_are_you_sending">What are you sending?</string>
+    <string name="selected_icon">Selected icon</string>
+    <string name="documents">Documents</string>
+    <string name="glass">Glass</string>
+    <string name="liquid">Liquid</string>
+    <string name="food">Food</string>
+    <string name="electronics">Electronics</string>
+    <string name="product">Product</string>
+    <string name="others">Others</string>
+    <string name="box">Box</string>
+    <string name="bag">Bag</string>
+    <string name="open">Open</string>
+    <string name="categories">Categories</string>
+    <string name="summary">Summary</string>
+    <string name="movemate">MoveMate</string>
+    <string name="package_icon">Package Icon</string>
+    <string name="total_estimated_amount">Total Estimated Amount</string>
+    <string name="disclaimer_text">This amount is estimated. It will vary if you change your location or weight.</string>
+    <string name="back_to_home">Back to home</string>
 </resources>

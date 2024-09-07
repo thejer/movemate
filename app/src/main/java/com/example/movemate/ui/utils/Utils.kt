@@ -1,4 +1,4 @@
-package com.example.movemate.ui
+package com.example.movemate.ui.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +24,7 @@ import com.example.movemate.ui.theme.Purple
 fun BackButton(modifier: Modifier = Modifier, onBackPressed: () -> Unit) {
     Icon(
         modifier = modifier
-            .clickable { onBackPressed() }, // Go back on click
+            .clickable { onBackPressed() },
         imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
         contentDescription = stringResource(id = R.string.back_button),
         tint = Color.White
