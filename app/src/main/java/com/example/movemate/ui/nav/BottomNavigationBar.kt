@@ -88,7 +88,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         composable(Screen.Profile.route) { ProfileScreen() }
         composable(Screen.Summary.route) {
             SummaryPage {
-                navController.navigate(Screen.Home.route)
+                navController.popBackStack(Screen.Home.route, false)
             }
         }
     }
